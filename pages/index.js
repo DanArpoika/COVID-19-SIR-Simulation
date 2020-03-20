@@ -1,7 +1,119 @@
 import React, { useState, useEffect, useReducer } from 'react';
 import Head from 'next/head'
-import Switch from '../components/Switch';
+import screen from 'superior-mq';
+import { rem, darken } from 'polished';
+import styled from 'styled-components';
+import Container from '../components/Container';
+import Card from '../components/Card';
+import Footer from '../components/Footer';
 import { ResponsiveLine } from '@nivo/line';
+import { formatNumber } from '../util';
+
+const App = styled.section`
+  padding: 40px 0;
+`;
+
+const GraphCard = styled(Card)`
+  height: 400px;
+  margin-top: 40px;
+`;
+
+const Heading = styled.h1`
+  padding: 0 0 20px 0;
+`;
+
+const NextDay = styled.button`
+  border-radius: 4px;
+  background-color: #6577E0;
+  color: ${props => props.theme.white};
+  padding: 10px 20px;
+  font-size: ${rem(18)};
+  font-weight: 600;
+  letter-spacing: 0.015em;
+
+  &:hover {
+    cursor: pointer;
+  }
+`;
+
+const Grid = styled.div`
+  display: grid;
+  grid-column-gap: 40px;
+  grid-template-columns: repeat(20, 1fr);
+
+  ${screen.below('992px', `
+    grid-column-gap: 0px;
+  `)}
+`;
+
+const GridItem = styled.div`
+  grid-column: span 10;
+
+  ${screen.below('992px', `
+    grid-column: span 20;
+    grid-column-gap: 0px;
+  `)}
+`;
+
+const Stat = styled.span`
+  flex: 0 0 50%;
+  position: relative;
+  line-height: ${rem(16)};
+
+  ${props => props.actionPad && `
+    margin-bottom: 15px;
+  `}
+`;
+
+const Value = styled.span`
+  flex: 0 0 50%;
+  text-align: right;
+
+  ${props => props.active && `
+    color: #b64372;
+  `}
+`;
+
+const StatGroup = styled.div`
+  padding: 20px 0 0 0;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+
+  ${props => props.twoThird && `
+    ${Stat} { flex: 66%; }
+    ${Value} { flex: 34%; }
+  `}
+`;
+
+const Action = styled.button`
+  padding: 0;
+  color: #6577E0;
+  font-size: ${rem(12)};
+  font-weight: 600;
+  letter-spacing: 0.015em;
+  background-color: transparent;
+  appearance: none;
+  border: 0;
+  text-transform: uppercase;
+  position: absolute;
+  left: 0;
+  bottom: -14px;
+
+  &:hover { cursor: pointer; }
+`;
+
+const Divider = styled.div`
+  background-color: ${props => darken(.05, props.theme.background)};
+  height: 2px;
+  margin: 20px auto 0 auto;
+`;
+
+const Notice = styled.span`
+  font-size: ${rem(12)};
+  text-align: right;
+  display: block;
+`;
 
 const Home = () => {
   const SUSCEPTIBLE = 327200000;
@@ -131,54 +243,101 @@ const Home = () => {
   }
 
   return (
-    <div className="container">
+    <App>
       <Head>
         <title>COVID-19 SIR Simulation</title>
       </Head>
 
-      <main>
-        <h3>Current Day: {data.day}</h3>
-        <h3>Infected Per Day: {(b * (1 - socialDistancing)).toFixed(3)}</h3>
-        <ul>
-          <li>Suscetible: {Math.round(s)}</li>
-          <li>Infected: {Math.round(i)}</li>
-          <li>Recovered: {Math.round(r)}</li>
-        </ul>
+      <Container>
+        <Heading>COVID-19 SIR Simulation</Heading>
 
-        <ul>
-          <li>
-            Social Distancing %:
-            <select onChange={handleSocial}>
-              <option value=".10" selected={socialDistancing == .10}>10%</option>
-              <option value=".25" selected={socialDistancing == .25}>25%</option>
-              <option value=".50" selected={socialDistancing == .50}>50%</option>
-              <option value=".75" selected={socialDistancing == .75}>75%</option>
-            </select>
-          </li>
-          <li>Schools: <Switch value={schoolsOpen ? 1 : 0} setChecked={handleSchools} /></li>
-          <li>Bars/Restaraunts: <Switch value={foodOpen ? 1 : 0} setChecked={handleFood} /></li>
-          <li>Shelter In Place: <Switch value={shelter ? 1 : 0} setChecked={handleShelter} /></li>
-        </ul>
-        <button onClick={() => dispatch({ type: 'ADD_DAY' })}>Next Day</button>
-        <div
-          style={{
-            margin: '200px auto 0 auto',
-            width: '90%',
-            height: '400px'
-          }}
-        >
+        <Grid>
+          <GridItem>
+            <Card>
+              <h3>Statistics</h3>
+              <StatGroup>
+                <Stat>Current Day:</Stat>
+                <Value>{data.day}</Value>
+                <Stat>Infected Per Day:</Stat>
+                <Value>{(b * (1 - socialDistancing)).toFixed(3)}%</Value>
+              </StatGroup>
+
+              <Divider />
+
+              <StatGroup>
+                <Stat>Suscetible</Stat>
+                <Value>{formatNumber(Math.round(s))}</Value>
+                <Stat>Infected</Stat>
+                <Value>{formatNumber(Math.round(i))}</Value>
+                <Stat>Recovered</Stat>
+                <Value>{formatNumber(Math.round(r))}</Value>
+              </StatGroup>
+              <Notice># of people</Notice>
+            </Card>
+          </GridItem>
+          <GridItem>
+            <Card>
+              <h3>Social Policies</h3>
+              <StatGroup twoThird>
+                <Stat actionPad>
+                  Schools Are
+                  <Action
+                    onClick={handleSchools}
+                  >
+                    Click to {schoolsOpen ? 'close' : 'open'}
+                  </Action>
+                </Stat>
+                <Value active={!schoolsOpen}>{schoolsOpen ? 'open' : 'closed'}</Value>
+
+                <Stat actionPad>
+                  Bars/Restaraunts Are
+                  <Action
+                    onClick={handleFood}
+                  >
+                    Click to {foodOpen ? 'close' : 'open'}
+                  </Action>
+                </Stat>
+                <Value active={!foodOpen}>{foodOpen ? 'open' : 'closed'}</Value>
+
+                <Stat actionPad>
+                  Shelter in Place:
+                  <Action
+                    onClick={handleShelter}
+                  >
+                    Click to {shelter ? 'disable' : 'order'}
+                  </Action>
+                </Stat>
+                <Value active={shelter}>{shelter ? 'ordered' : 'not ordered'}</Value>
+
+                <Stat>
+                  Social Distancing Effectiveness
+                </Stat>
+                <Value>
+                <select onChange={handleSocial}>
+                    <option value=".10" selected={socialDistancing == .10}>10%</option>
+                    <option value=".25" selected={socialDistancing == .25}>25%</option>
+                    <option value=".50" selected={socialDistancing == .50}>50%</option>
+                    <option value=".75" selected={socialDistancing == .75}>75%</option>
+                  </select>
+                </Value>
+              </StatGroup>
+            </Card>
+          </GridItem>
+        </Grid>
+
+        <NextDay onClick={() => dispatch({ type: 'ADD_DAY' })}>Next Day</NextDay>
+        <GraphCard>
           <ResponsiveLine
             data={data.points}
             margin={{ top: 50, right: 160, bottom: 50, left: 60 }}
             xScale={{ type: 'linear' }}
-            yScale={{ type: 'linear', stacked: true, min: 0, max: 328000000 }}
+            yScale={{ type: 'linear', stacked: true }}
             curve="monotoneX"
             axisTop={null}
             axisBottom={{
                 tickSize: 1,
                 tickPadding: 5,
                 tickRotation: 0,
-
                 legend: 'Day',
                 legendOffset: 36,
                 legendPosition: 'middle'
@@ -232,13 +391,11 @@ const Home = () => {
                 }
             ]}
         />
-        </div>
-      </main>
+        </GraphCard>
+      </Container>
 
-      <footer>
-
-      </footer>
-    </div>
+      <Footer />
+    </App>
   );
 };
 
