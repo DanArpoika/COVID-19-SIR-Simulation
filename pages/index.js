@@ -339,6 +339,8 @@ const Home = () => {
         >
           Next Day
         </NextDay>
+
+        <p>Click the "Next Day" button to generate statistics for the following day. To get the most of this, make some changes before proceeding to the next day to see how certain policies make a difference.</p>
         <GraphCard>
           <ResponsiveLine
             data={data.points}
