@@ -239,7 +239,7 @@ const Home = () => {
     const { value } = target;
     const newVal = parseFloat(value, 10);
 
-    setSocialDistancing(1 - newVal);
+    setSocialDistancing(newVal);
   }
 
   return (
@@ -265,7 +265,7 @@ const Home = () => {
               <Divider />
 
               <StatGroup>
-                <Stat>Suscetible</Stat>
+                <Stat>Susceptible</Stat>
                 <Value>{formatNumber(Math.round(s))}</Value>
                 <Stat>Infected</Stat>
                 <Value>{formatNumber(Math.round(i))}</Value>
