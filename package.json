@@ -16,6 +16,7 @@
     "react": "16.13.0",
     "react-dom": "16.13.0",
     "react-ga": "^2.7.0",
+    "react-helmet": "^5.2.1",
     "styled-components": "^5.0.1",
     "superior-mq": "^1.0.1",
     "table": "^5.4.6"

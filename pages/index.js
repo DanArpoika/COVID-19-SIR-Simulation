@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useReducer } from 'react';
-import Head from 'next/head'
+import Helmet from 'react-helmet';
 import screen from 'superior-mq';
 import ReactGA from 'react-ga';
 import { rem, darken } from 'polished';
@@ -250,9 +250,16 @@ const Home = () => {
 
   return (
     <App>
-      <Head>
+       <Helmet>
         <title>COVID-19 SIR Simulation</title>
-      </Head>
+        <meta name="description" content="This model is based off the SIR model. This is a simulation only to show the possible effects of government mandated social polices and how they might 'flatten the curve'. This is a model only and not based off any real data." />
+        <meta property="og:description" content="This model is based off the SIR model. This is a simulation only to show the possible effects of government mandated social polices and how they might 'flatten the curve'. This is a model only and not based off any real data." />
+        <meta name="twitter:description" content="This model is based off the SIR model. This is a simulation only to show the possible effects of government mandated social polices and how they might 'flatten the curve'. This is a model only and not based off any real data.yarn dev" />
+        <meta property="og:title" content="COVID-19 SIR Simulation" />
+        <meta name="twitter:title" content="COVID-19 SIR Simulation" />
+        <meta property="og:image" content="/og-image.jpg" />
+        <meta name="twitter:image" content="/og-image.jpg" />
+      </Helmet>
 
       <Container>
         <Heading>COVID-19 SIR Simulation</Heading>
