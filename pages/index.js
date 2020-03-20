@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useReducer } from 'react';
 import Head from 'next/head'
 import screen from 'superior-mq';
+import ReactGA from 'react-ga';
 import { rem, darken } from 'polished';
 import styled from 'styled-components';
 import Container from '../components/Container';
@@ -242,6 +243,11 @@ const Home = () => {
     setSocialDistancing(newVal);
   }
 
+  useEffect(() => {
+    ReactGA.initialize('UA-161409298-1');
+    ReactGA.pageview(window.location.pathname);
+  });
+
   return (
     <App>
       <Head>
@@ -325,7 +331,18 @@ const Home = () => {
           </GridItem>
         </Grid>
 
-        <NextDay onClick={() => dispatch({ type: 'ADD_DAY' })}>Next Day</NextDay>
+        <NextDay
+          onClick={() => {
+            dispatch({ type: 'ADD_DAY' });
+            ReactGA.event({
+              category: 'COVID-19',
+              action: 'DAY_CLICKED',
+              label: 'Next Day'
+            });
+          }}
+        >
+          Next Day
+        </NextDay>
         <GraphCard>
           <ResponsiveLine
             data={data.points}
