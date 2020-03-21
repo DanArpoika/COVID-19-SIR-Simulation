@@ -344,7 +344,7 @@ const Home = () => {
         <GraphCard>
           <ResponsiveLine
             data={data.points}
-            margin={{ top: 50, right: 160, bottom: 50, left: 60 }}
+            margin={{ top: 50, right: 10, bottom: 70, left: 60 }}
             xScale={{ type: 'linear' }}
             yScale={{ type: 'linear', stacked: true }}
             curve="monotoneX"
@@ -381,11 +381,11 @@ const Home = () => {
             gridYValues={[ 0, 500, 1000, 1500, 2000, 2500 ]}
             legends={[
                 {
-                    anchor: 'bottom-right',
+                    anchor: 'bottom-left',
                     direction: 'column',
                     justify: false,
-                    translateX: 140,
-                    translateY: 0,
+                    translateX: 0,
+                    translateY: 60,
                     itemsSpacing: 2,
                     itemDirection: 'left-to-right',
                     itemWidth: 80,
