@@ -9,6 +9,7 @@ import Card from '../components/Card';
 import Footer from '../components/Footer';
 import { ResponsiveLine } from '@nivo/line';
 import { formatNumber } from '../util';
+import initial from '../components/initial.json';
 
 const App = styled.section`
   padding: 40px 0;
@@ -122,20 +123,16 @@ const Home = () => {
   const RECOVERED = 0;
   const BETA = .508; // SUSCEPTIBLES INFECTED PER DAY
   const Y = 0.0094; // FFRACTION OF INFECTIVES WHO RECOVER PER DAY
-  const TIME_INTERVAL = 1; // TIME INTERVAL IN DAYS
 
   const initialState = {
     points: [
-      // {
-      //   label: 'Suscetible',
-      //   data: [[1, SUSCEPTIBLE - INFECTED]]
-      // },
+      ...initial,
       {
-        id: "recovered",
+        id: "Recovered",
         data: [{x: 1, y: 0}],
       },
       {
-        id: 'infected',
+        id: 'Infected',
         data: [{ x: 1, y: 60}],
       },
     ],
@@ -146,15 +143,19 @@ const Home = () => {
   const [i, setI] = useState(INFECTED); // infected; initial
   const [r, setR] = useState(RECOVERED); // recovered; initial
   const [b, setB] = useState(BETA); // fraction of susceptibles infected/day
-  const [y, setY] = useState(Y); // fraction of infectives who recover/day
-  const [day, setDay] = useState(1); // start date
-  let nu = s + i + r; // total number of people
 
   const addPoints = (state, payload) => {
     const { s, i, r } = payload;
-    const sets = [r, i];
+    const sets = [0, 0, r, i];
 
     return state.points.map((set, index) => {
+      // Leave the OG data to compare too.
+      if (index < 2) {
+        return {
+          ...set,
+        };
+      }
+
       const newData = [...set.data, sets[index]];
 
       return {
@@ -247,6 +248,14 @@ const Home = () => {
     ReactGA.initialize('UA-161409298-1');
     ReactGA.pageview(window.location.pathname);
   });
+
+  const colors = {
+    'No Mitigation - Recovered': '#f03b20',
+    'No Mitigation - Infected': '#bd0026',
+    'Recovered': '#6577E0',
+    'Infected': '#542788',
+  }
+  const getColor = line => colors[line.id]
 
   return (
     <App>
@@ -346,9 +355,9 @@ const Home = () => {
             data={data.points}
             margin={{ top: 50, right: 10, bottom: 70, left: 60 }}
             xScale={{ type: 'linear' }}
-            yScale={{ type: 'linear', stacked: true }}
+            yScale={{ type: 'linear' }}
             curve="monotoneX"
-            axisTop={null}
+            colors={getColor}
             axisBottom={{
                 tickSize: 1,
                 tickPadding: 5,
@@ -366,8 +375,7 @@ const Home = () => {
                 legendOffset: -50,
                 legendPosition: 'middle'
             }}
-            enableGridX={false}
-            colors={{ scheme: 'spectral' }}
+
             lineWidth={1}
             pointSize={4}
             pointColor={{ theme: 'background' }}
