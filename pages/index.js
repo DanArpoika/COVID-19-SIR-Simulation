@@ -16,7 +16,7 @@ const App = styled.section`
 `;
 
 const GraphCard = styled(Card)`
-  height: 400px;
+  height: 500px;
   margin-top: 40px;
 `;
 
@@ -353,7 +353,7 @@ const Home = () => {
         <GraphCard>
           <ResponsiveLine
             data={data.points}
-            margin={{ top: 50, right: 10, bottom: 70, left: 60 }}
+            margin={{ top: 50, right: 10, bottom: 90, left: 60 }}
             xScale={{ type: 'linear' }}
             yScale={{ type: 'linear' }}
             curve="monotoneX"
@@ -393,7 +393,7 @@ const Home = () => {
                     direction: 'column',
                     justify: false,
                     translateX: 0,
-                    translateY: 60,
+                    translateY: 90,
                     itemsSpacing: 2,
                     itemDirection: 'left-to-right',
                     itemWidth: 80,
